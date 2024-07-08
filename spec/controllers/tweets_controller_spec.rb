@@ -31,15 +31,19 @@ RSpec.describe TweetsController, type: :controller do
       session = user.sessions.create
       @request.cookie_jar.signed['twitter_session_token'] = session.token
 
+      # Ensure 'test.png' exists in spec/fixtures/files directory
+      file = fixture_file_upload('test.png', 'image/png')
+
       post :create, params: {
         tweet: {
           message: 'Test Message',
-          image: fixture_file_upload('test.png')
+          image: file
         }
       }
 
+      expect(response).to have_http_status(:created)
       expect(JSON.parse(response.body)['tweet']['message']).to eq('Test Message')
-      expect(JSON.parse(response.body)['tweet']['image']).to include('test.png')
+      expect(JSON.parse(response.body)['tweet']['image']['url']).to include('test.png')
     end
   end
 
@@ -129,3 +133,4 @@ RSpec.describe TweetsController, type: :controller do
     end
   end
 end
+

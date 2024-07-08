@@ -10,7 +10,17 @@ class TweetsController < ApplicationController
     user = session.user
     @tweet = user.tweets.new(tweet_params)
 
-    render 'tweets/create' if @tweet.save
+    if @tweet.save
+      render json: {
+        tweet: {
+          username: @tweet.user.username,
+          message: @tweet.message,
+          image: @tweet.image.attached? ? url_for(@tweet.image) : nil # Add image URL if attached
+        }
+      }, status: :created # Return 201 Created status
+    else
+      render json: { errors: @tweet.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -23,13 +33,9 @@ class TweetsController < ApplicationController
     tweet = Tweet.find_by(id: params[:id])
 
     if tweet && (tweet.user == user) && tweet.destroy
-      render json: {
-        success: true
-      }
+      render json: { success: true }
     else
-      render json: {
-        success: false
-      }
+      render json: { success: false }
     end
   end
 
@@ -45,6 +51,7 @@ class TweetsController < ApplicationController
   private
 
   def tweet_params
-    params.require(:tweet).permit(:message)
+    params.require(:tweet).permit(:message, :image) # Permit :image along with :message
   end
 end
+

@@ -48,7 +48,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   # Include FixtureFileUpload to support testing file uploads
-  config.include ActionDispatch::TestProcess::FixtureFileUpload
+  config.include ActionDispatch::TestProcess::FixtureSet::FixtureFileUpload
 
   # Include Rails Controller Testing helpers
   config.include Rails::Controller::Testing::TestProcess

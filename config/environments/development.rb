@@ -31,12 +31,12 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.mailgun.org',
-    port:                 587,
-    domain:               'sandboxc8f5668c76f1437ebf6571563ad5c674.mailgun.org',
-    user_name:            'postmaster@sandboxc8f5668c76f1437ebf6571563ad5c674.mailgun.org',
-    password: ENV['MAILGUN_SMTP_PASSWORD']
-    authentication:       'plain',
+    address: 'smtp.mailgun.org',
+    port: 587,
+    domain: 'sandboxc8f5668c76f1437ebf6571563ad5c674.mailgun.org',
+    user_name: 'postmaster@sandboxc8f5668c76f1437ebf6571563ad5c674.mailgun.org',
+    password: ENV['MAILGUN_SMTP_PASSWORD'],
+    authentication: 'plain',
     enable_starttls_auto: true
   }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
@@ -70,4 +70,3 @@ Rails.application.configure do
   # Using the Amazon S3 settings for Active Storage.
   config.active_storage.service = :amazon
 end
-

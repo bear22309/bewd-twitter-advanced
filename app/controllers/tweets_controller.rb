@@ -11,14 +11,16 @@ class TweetsController < ApplicationController
     @tweet = user.tweets.new(tweet_params)
 
     if @tweet.save
-      TweetMailer.notify(@tweet).deliver! # invoke TweetMailer to send out the email when a tweet is successfully posted
-      render json: {
-        tweet: {
-          username: @tweet.user.username,
-          message: @tweet.message,
-          image: @tweet.image.attached? ? url_for(@tweet.image) : nil # Add image URL if attached
-        }
-      }, status: :created # Return 201 Created status
+      TweetMailer.notify(@tweet).deliver! # invoke TweetMailer to send out the email
+      tweet_response = {
+        username: @tweet.user.username,
+        message: @tweet.message
+      }
+      if @tweet.image.attached?
+        tweet_response[:image] = { url: url_for(@tweet.image) } # Add image URL if attached
+      end
+
+      render json: { tweet: tweet_response }, status: :created # Return 201 Created status
     else
       render json: { errors: @tweet.errors.full_messages }, status: :unprocessable_entity
     end
@@ -27,7 +29,6 @@ class TweetsController < ApplicationController
   def destroy
     token = cookies.signed[:twitter_session_token]
     session = Session.find_by(token: token)
-
     return render json: { success: false } unless session
 
     user = session.user

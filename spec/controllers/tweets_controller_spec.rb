@@ -19,7 +19,6 @@ RSpec.describe TweetsController, type: :controller do
         tweet: {
           username: user.username,
           message: 'Test Message'
-          image: nil
         }
       }.to_json)
 
